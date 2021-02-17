@@ -1,7 +1,9 @@
 const mysql = require('../database/mysql');
 
 exports.getClientes = async (req, res, next) => {
-    const result = await mysql.execute("SELECT * FROM clientes")
+    try {
+        const result = await mysql.execute("SELECT * FROM clientes")
+        
         const response = {
         quantidade: result.length,
         clientes: result.map(clien => {
@@ -12,15 +14,30 @@ exports.getClientes = async (req, res, next) => {
             }
         })
     }
+
     res.status(200).send(response);
+
+    } catch (error) {
+        return res.status(500).send({ error:error });
+    }     
 }
 
-exports.postClientes = (req, res, next) => {
-    const query = 'INSERT INTO clientes (nome, email) VALUES (?,?)';
+exports.postClientes = async (req, res, next) => {
+    try {
+        const queryVerificacao = 'SELECT * FROM clientes WHERE email = ?';
+        const resultVerificacao = await mysql.execute(queryVerificacao, [
+            req.body.email
+        ])
+        if (resultVerificacao.length > 0) {
+            return res.status(400).send({ mensagem: "E-mail digitado já existente em nossa base de dados. Favor, verificar" })
+        }
+
+        const query = 'INSERT INTO clientes (nome, email) VALUES (?,?)';
         const result = mysql.execute(query, [
             req.body.nome,
             req.body.email
         ])
+        
         const response = {
             mensagem: 'Cliente inserido com sucesso',
             clienteAdicionado: {
@@ -29,14 +46,26 @@ exports.postClientes = (req, res, next) => {
                 email: req.body.email
             }
         }
-        res.status(201).send(response);
+
+    res.status(201).send(response);
+
+    } catch (error) {
+        return res.status(500).send({ error:error });
+    }
 }
 
 exports.getUmCliente = async (req, res, next) => {
-    const query = 'SELECT * FROM clientes WHERE idclientes = ?';
+    try {
+        const query = 'SELECT * FROM clientes WHERE idclientes = ?';
         const result = await mysql.execute(query, [
             req.params.id_cliente
         ])
+        if (result.length == 0) {
+            return res.status(404).send({
+                mensagem: 'Não foi encontrado cliente com este ID'
+            })
+        }
+        
         const response = {
             cliente: {
                 id_cliente: result[0].idclientes,
@@ -44,38 +73,74 @@ exports.getUmCliente = async (req, res, next) => {
                 email: result[0].email
             }
         }
+
         return res.status(200).send(response);
-    
+
+    } catch (error) {
+        return res.status(500).send({ error: error });
+    }
 }
 
 exports.patchCliente = async (req, res, next) => {
-    const query = `UPDATE clientes
+    try {
+        const queryVerificacao = 'SELECT * FROM clientes WHERE email = ?';
+        const resultVerificacao = await mysql.execute(queryVerificacao, [
+            req.body.email
+        ])
+        if (resultVerificacao.length > 0) {
+            return res.status(400).send({ mensagem: "E-mail digitado já existente em nossa base de dados. Favor, verificar" })
+        }
+
+        const query = `UPDATE clientes
                       SET nome = ?,
                           email = ?
                     WHERE idclientes = ?`;
-    await mysql.execute(query, [
-        req.body.nome, 
-        req.body.email, 
-        req.params.id_cliente
-    ]);
-    const response = {
-        mensagem: 'Cliente atualizado com sucesso!',
-        clienteAtualizado: {
-            id_cliente: req.params.id_cliente,
-            nome: req.body.nome,
-            email: req.body.email
+        await mysql.execute(query, [
+            req.body.nome, 
+            req.body.email, 
+            req.params.id_cliente
+        ]);
+
+        const response = {
+            mensagem: 'Cliente atualizado com sucesso!',
+            clienteAtualizado: {
+                id_cliente: req.params.id_cliente,
+                nome: req.body.nome,
+                email: req.body.email
+            }
         }
+
+        res.status(202).send(response);
+
+    } catch (error) {
+        return res.status(500).send({ error: error });
     }
-    res.status(202).send(response);
 }
 
 exports.deleteCliente = async (req, res, next) => {
-    const query = `DELETE FROM clientes WHERE idclientes = ?`
+    try {
+        const queryVerificaId = 'SELECT * FROM clientes WHERE idclientes = ?';
+        const resultaVerificaId = await mysql.execute(queryVerificaId, [
+            req.params.id_cliente
+        ])
+
+        if (resultaVerificaId.length == 0) {
+            res.status(400).send({ mensagem: "O cliente selecionado para ser deletado não existe. Verifique seu ID" })
+            return
+        }
+
+        const query = `DELETE FROM clientes WHERE idclientes = ?`
         await mysql.execute(query, [
             req.params.id_cliente
         ]);
+        
         const response = {
             mensagem: 'Cliente removido com sucesso'
         }
+
         res.status(202).send(response)
+
+    } catch (error) {
+        return res.status(500).send({ error: error })
+    }
 }
