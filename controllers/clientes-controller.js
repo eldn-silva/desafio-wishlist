@@ -1,9 +1,11 @@
+const mysql = require('../database/mysql');
+
 exports.getClientes = (req, res, next) => {
     res.status(200).send('Rota GET CLIENTES OK')
 }
 
 exports.postClientes = (req, res, next) => {
-    res.status(201).send('Rota POST CLIENTES OK');
+    res.status(201).send('Rota GET CLIENTES OK')
 }
 
 exports.getUmCliente = (req, res, next) => {
