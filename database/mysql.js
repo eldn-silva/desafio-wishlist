@@ -5,7 +5,7 @@ var pool = mysql.createPool({
     "password": 'desafio123',
     "database": 'desafio',
     "host": 'localhost',
-    "port": 3306
+    "port": 3306,
 })
 
 exports.execute = (query, params=[]) => {
