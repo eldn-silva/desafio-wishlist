@@ -10,21 +10,31 @@ exports.postWishlist = async (req, res, next) => {
     try {
         const { data } = await axios(`http://challenge-api.luizalabs.com/api/product/${dados.id_produto}/`)
 
-        const queryVerificacao = 'SELECT * FROM wishlist WHERE idproduto = ? AND clientes_idclientes = ?'
-        const verificacao = await mysql.execute(queryVerificacao, [
+        const querySelectVerific = 'SELECT * FROM wishlist WHERE idproduto = ? AND clientes_idclientes = ?'
+        const querySelectClient = 'SELECT * FROM clientes WHERE idclientes = ?';
+        const queryInsert = 'INSERT INTO wishlist (idproduto, titulo, preco, imagem, clientes_idclientes) VALUES (?,?,?,?,?)'
+
+        const verificacao = await mysql.execute(querySelectVerific, [
             dados.id_produto,
             dados.id_cliente
         ])
-
         if (verificacao.length > 0) {
-            return res.status(400).send({ message: 'Produto já existe na lista de desejos do cliente.' })
+            res.status(400).send({ message: 'Produto já existe na lista de desejos do cliente.' })
         }
 
-        const query = 'INSERT INTO wishlist (idproduto, titulo, preco, imagem, clientes_idclientes) VALUES (?,?,?,?,?)'
-        await mysql.execute(query, [
+        const resultVerificaCliente = await mysql.execute(querySelectClient, [
+            req.body.id_cliente
+        ])
+        if (resultVerificaCliente.length == 0) {
+            return res.status(404).send({
+                mensagem: 'Não foi encontrado cliente com este ID'
+            })
+        }
+
+        await mysql.execute(queryInsert, [
             dados.id_produto, 
             data.title, 
-            data.price, 
+            data.price,
             data.image, 
             dados.id_cliente
         ])
@@ -47,11 +57,11 @@ exports.postWishlist = async (req, res, next) => {
 
 exports.getClienteWishlist = async (req, res, next) => {
     try {
-        const query = `SELECT * FROM wishlist WHERE clientes_idclientes = ?`
-        const result = await mysql.execute(query, [
+        const querySelect = `SELECT * FROM wishlist WHERE clientes_idclientes = ?`
+
+        const result = await mysql.execute(querySelect, [
             req.params.id_cliente
         ])
-
         if(result.length == 0) {
             return res.status(404).send({
                 mensagem: 'Lista de desejos vazia ou cliente não existe'
@@ -82,12 +92,12 @@ exports.getClienteWishlist = async (req, res, next) => {
 
 exports.getProdutoWishlist = async (req, res, next) => {
     try {
-        const query = `SELECT * FROM wishlist WHERE clientes_idclientes = ? AND id = ?`
-        const result = await mysql.execute(query, [
+        const querySelect = `SELECT * FROM wishlist WHERE clientes_idclientes = ? AND id = ?`
+
+        const result = await mysql.execute(querySelect, [
             req.params.id_cliente,
             req.params.id_produto
         ])
-
         if(result.length == 0) {
             return res.status(404).send({
                 mensagem: `O produto selecionado não existe para o cliente com id = ${req.params.id_cliente}`
@@ -117,18 +127,18 @@ exports.getProdutoWishlist = async (req, res, next) => {
 
 exports.deleteProductWishList = async (req, res, next) => {
     try {
-        const queryVerificacao = 'SELECT * FROM wishlist WHERE clientes_idclientes = ? AND idproduto = ?'
-        const verificacao = await mysql.execute(queryVerificacao, [
+        const querySelect = 'SELECT * FROM wishlist WHERE clientes_idclientes = ? AND idproduto = ?'
+        const queryDelete = 'DELETE FROM wishlist WHERE clientes_idclientes = ? AND idproduto = ?'
+
+        const verificacao = await mysql.execute(querySelect, [
             req.body.id_cliente, 
             req.body.id_produto
         ])
-
         if (verificacao.length == 0) {
             return res.status(400).send({ message: 'Produto selecionado não existe na wish list do cliente. Favor, verificar' })
         }
 
-        const query = 'DELETE FROM wishlist WHERE clientes_idclientes = ? AND idproduto = ?'
-        await mysql.execute(query, [
+        await mysql.execute(queryDelete, [
             req.body.id_cliente, 
             req.body.id_produto
         ]);
