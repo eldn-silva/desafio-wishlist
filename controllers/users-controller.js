@@ -62,3 +62,52 @@ exports.loginUser = async (req, res, next) => {
         return res.status(500).send({ message: 'Falha na autenticação' })
     }
 }
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const querySelect = 'SELECT * FROM usuarios WHERE id_usuario = ?';
+        const queryDelete = `DELETE FROM usuarios WHERE id_usuario = ?`;
+
+        const resultVerificaUser = await mysql.execute(querySelect, [
+            req.params.id_usuario
+        ])
+        if (resultVerificaUser.length == 0) {
+            res.status(400).send({ mensagem: "O usuário selecionado para ser deletado não existe. Verifique o ID do mesmo" })
+            return
+        }
+
+        await mysql.execute(queryDelete, [
+            req.params.id_usuario
+        ]);
+        
+        const response = {
+            mensagem: 'Usuário removido com sucesso'
+        }
+
+        res.status(202).send(response)
+
+    } catch (error) {
+        return res.status(500).send({ error: error })
+    }
+}
+
+exports.getUsers = async (req, res, next) => {
+    try {
+        const result = await mysql.execute("SELECT * FROM usuarios")
+        
+        const response = {
+        quantidade: result.length,
+        usuarios: result.map(user => {
+            return {
+                id_usuario: user.id_usuario,
+                email: user.email
+            }
+        })
+    }
+
+    res.status(200).send(response);
+
+    } catch (error) {
+        return res.status(500).send({ error:error });
+    }     
+}
