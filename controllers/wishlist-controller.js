@@ -59,8 +59,44 @@ exports.getClienteWishlist = async (req, res, next) => {
         }
 
         const response = {
+            mensagem: `Produtos favoritos do cliente de ID = ${req.params.id_cliente}`,
             quantidade: result.length,
-            mensagem: `Produtos favoritos do cliente`,
+            wishlist: result.map(prod => {
+                return {
+                    produtosFavoritos: {
+                        titulo: prod.titulo,
+                        imagem: prod.imagem,
+                        preco: prod.preco,
+                        req_acesso_ao_produto: { tipo: 'GET', url: 'http://localhost:3000/wishlist/' + req.params.id_cliente + '/' + prod.id}
+                    }
+                }
+            })
+        } 
+
+        res.status(200).send(response)
+
+    } catch (error) {
+        return res.status(500).send({ error: error })
+    }
+}
+
+exports.getProdutoWishlist = async (req, res, next) => {
+    try {
+        const query = `SELECT * FROM wishlist WHERE clientes_idclientes = ? AND id = ?`
+        const result = await mysql.execute(query, [
+            req.params.id_cliente,
+            req.params.id_produto
+        ])
+
+        if(result.length == 0) {
+            return res.status(404).send({
+                mensagem: `O produto selecionado não existe para o cliente com id = ${req.params.id_cliente}`
+            })
+        }
+
+        const response = {
+            quantidade: result.length,
+            mensagem: 'Produto selecionado exibido abaixo:',
             wishlist: result.map(prod => {
                 return {
                     produtosFavoritos: {
