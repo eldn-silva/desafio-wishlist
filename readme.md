@@ -40,6 +40,28 @@ Colaboradores do Magalu podem se cadastrar nesta plataforma, enviando:
 - Rodar script SQL (que está no arquivo database/criar-banco-e-tabelas.sql) no MYSQL;
 - Iniciar o servidor;
 <p>
+<h2> API dos produtos </h2>
+A API dos produtos que é consumida por esta API, é acessada através da URL abaixo:
+
+```
+http://challenge-api.luizalabs.com/api/product/?page=<PAGINA>
+```
+Onde PAGINA representa o número da página requisitada, iniciando em 1.
+
+Para acessar um produto específico, basta entrar com o ID do produto no endpoint, conforme abaixo:
+
+```
+http://challenge-api.luizalabs.com/api/product/<ID>/
+```
+
+A estrutura dos produtos é composta por:
+- price: preço do produto
+- image: URL da imagem do produto
+- brand: marca do produto
+- id: id do produto
+- title: nome do produto
+- reviewScore: média dos reviews para este produto
+
 <h2> Scripts </h2>
 Antes de realizar os testes na presente API, é necessário rodar uma script SQL no MYSQL, para criação da DATABASE, TABELAS e seus respectivos relacionamentos. Esta script se encontra no arquivo database/criar-banco-e-tabelas.sql deste projeto. Esta script irá gerar também um usuário com permissão para administrar a database, usuário este que é o mesmo cadastrado na presente API.
 <h2>Parâmetros de execução da tabela</h2>
