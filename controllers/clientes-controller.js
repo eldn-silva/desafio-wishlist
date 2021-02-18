@@ -116,13 +116,22 @@ exports.patchCliente = async (req, res, next) => {
 exports.deleteCliente = async (req, res, next) => {
     try {
         const querySelect = 'SELECT * FROM clientes WHERE idclientes = ?';
-        const queryDelete = `DELETE FROM clientes WHERE idclientes = ?`
+        const queryDelete = `DELETE FROM clientes WHERE idclientes = ?`;
+        const querySelectWishlist = 'SELECT * FROM wishlist WHERE clientes_idclientes = ?'
 
         const resultaVerificaId = await mysql.execute(querySelect, [
             req.params.id_cliente
         ])
         if (resultaVerificaId.length == 0) {
             res.status(400).send({ mensagem: "O cliente selecionado para ser deletado não existe. Verifique seu ID" })
+            return
+        }
+
+        const resultVerificationWishlist = await mysql.execute(querySelectWishlist, [
+            req.params.id_cliente
+        ])
+        if (resultVerificationWishlist.length > 0) {
+            res.status(400).send({ mensagem: "O cliente selecionado não pode ser deletado pois possui produtos na wish list." })
             return
         }
 
