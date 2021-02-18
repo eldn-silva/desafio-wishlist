@@ -1,4 +1,4 @@
-var mysql = require('mysql2');
+var mysql = require('mysql2')
 
 var pool = mysql.createPool({
     "user": 'usr_usuario',
@@ -20,4 +20,4 @@ exports.execute = (query, params=[]) => {
     })
 }
 
-exports.pool = pool;
+exports.pool = pool

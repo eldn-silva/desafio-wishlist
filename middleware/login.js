@@ -1,13 +1,13 @@
-const jwt = require('jsonwebtoken');
-const JWT_KEY = require('../jwt_key.json');
+const jwt = require('jsonwebtoken')
+const JWT_KEY = require('../jwt_key.json')
 
 exports.obrigatorio = (req, res, next) => {
 
     try{
         const token = req.headers.authorization.split(' ')[1]
-        const decode = jwt.verify(token, JWT_KEY.chave);
-        req.usuario = decode;
-        next();
+        const decode = jwt.verify(token, JWT_KEY.chave)
+        req.usuario = decode
+        next()
     } catch (error) {
         return res.status(401).send({ mensagem: 'Falha na autenticação '})
     }
@@ -19,8 +19,8 @@ exports.opcional = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         const decode = jwt.verify(token, JWT_KEY.chave);
         req.usuario = decode;
-        next();
+        next()
     } catch (error) {
-        next();
+        next()
     }
 }

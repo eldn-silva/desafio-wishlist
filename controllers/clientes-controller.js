@@ -1,4 +1,4 @@
-const mysql = require('../database/mysql');
+const mysql = require('../database/mysql')
 
 exports.getClientes = async (req, res, next) => {
     try {
@@ -48,10 +48,10 @@ exports.postClientes = async (req, res, next) => {
             }
         }
 
-    res.status(201).send(response);
+    res.status(201).send(response)
 
     } catch (error) {
-        return res.status(500).send({ error:error });
+        return res.status(500).send({ error:error })
     }
 }
 
@@ -76,10 +76,10 @@ exports.getUmCliente = async (req, res, next) => {
             }
         }
 
-        return res.status(200).send(response);
+        return res.status(200).send(response)
 
     } catch (error) {
-        return res.status(500).send({ error: error });
+        return res.status(500).send({ error: error })
     }
 }
 
@@ -106,10 +106,10 @@ exports.patchCliente = async (req, res, next) => {
             }
         }
 
-        res.status(202).send(response);
+        res.status(202).send(response)
 
     } catch (error) {
-        return res.status(500).send({ error: error });
+        return res.status(500).send({ error: error })
     }
 }
 

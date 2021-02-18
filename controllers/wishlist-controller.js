@@ -1,5 +1,5 @@
-const mysql = require('../database/mysql');
-const axios = require('axios');
+const mysql = require('../database/mysql')
+const axios = require('axios')
 
 exports.postWishlist = async (req, res, next) => {
     const dados = {
