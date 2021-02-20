@@ -1,8 +1,8 @@
 var mysql = require('mysql2')
 
 var pool = mysql.createPool({
-    "user": 'usr_usuario',
-    "password": 'usuario123',
+    "user": 'joao',
+    "password": 'usuario1234',
     "database": 'desafio',
     "host": 'localhost',
     "port": 3306,
