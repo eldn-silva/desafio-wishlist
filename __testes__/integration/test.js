@@ -1,6 +1,10 @@
+/**
+ * @jest-environment node
+ */
 require('dotenv').config()
 const request = require('supertest')
 const server = require('../../server')
+const nock = require('nock')
 
 token = process.env.token
 
@@ -81,11 +85,32 @@ describe("DELETE /clientes/:id", () => {
 //testes rota wishlist
 
 describe("POST /wishlist", () => {
+    beforeEach((done) => {
+        nock.disableNetConnect();
+        nock.enableNetConnect(/^(127\.0\.0\.1|localhost)/);
+        nock.cleanAll();
+        done();
+    });
+
+    afterEach((done) => {
+        nock.cleanAll();
+        done();
+    })
+
     it ("should return 201", async () => {
+        nock('http://challenge-api.luizalabs.com/api/product').get('/2b505fab-d865-e164-345d-efbd4c2045b6/')
+            .reply(200, {
+                "price": 6309.9, 
+                "image": "http://challenge-api.luizalabs.com/images/2b505fab-d865-e164-345d-efbd4c2045b6.jpg", 
+                "brand": "ibanez", 
+                "id": "2b505fab-d865-e164-345d-efbd4c2045b6", 
+                "title": "Guitarra Original Ibanez DN 520K"
+        }
+    );
         const response = await request(server)
-        .post("/wishlist")
-        .send({ id_produto: '1bf0f365-fbdd-4e21-9786-da459d78dd1f', id_cliente: 1 })
-        .set('authorization', `bearer ${token}`)
+            .post("/wishlist")
+            .send({ id_produto: '2b505fab-d865-e164-345d-efbd4c2045b6', id_cliente: 1 })
+            .set('authorization', `bearer ${token}`)
 
     expect(response.status).toBe(201)
     })
