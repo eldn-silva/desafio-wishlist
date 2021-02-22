@@ -45,10 +45,7 @@ exports.loginUser = async (req, res, next) => {
                 id_usuario: results[0].id_usuario,
                 email: results[0].email
             },
-            process.env.JWT_KEY,
-            {
-                expiresIn: "5h"
-            });
+            process.env.JWT_KEY);
             return res.status(200).send({
                 mensagem: 'Autenticado com sucesso',
                 token: token
