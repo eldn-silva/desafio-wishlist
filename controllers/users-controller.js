@@ -1,7 +1,6 @@
 const mysql = require('../database/mysql')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const JWT_KEY = require('../jwt_key.json')
 
 
 exports.createUser = async (req, res, next) => {
@@ -46,7 +45,7 @@ exports.loginUser = async (req, res, next) => {
                 id_usuario: results[0].id_usuario,
                 email: results[0].email
             },
-            JWT_KEY.chave,
+            process.env.JWT_KEY,
             {
                 expiresIn: "5h"
             });

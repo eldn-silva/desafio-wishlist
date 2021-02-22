@@ -7,8 +7,9 @@ exports.postWishlist = async (req, res, next) => {
         id_cliente: req.body.id_cliente
     }
 
+    const { data } = await axios(`http://challenge-api.luizalabs.com/api/product/${dados.id_produto}/`)
+
     try {
-        const { data } = await axios(`http://challenge-api.luizalabs.com/api/product/${dados.id_produto}/`)
 
         const querySelectVerific = 'SELECT * FROM wishlist WHERE idproduto = ? AND clientes_idclientes = ?'
         const querySelectClient = 'SELECT * FROM clientes WHERE idclientes = ?';
