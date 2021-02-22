@@ -111,6 +111,10 @@ Após os serviços e aplicação rodando, é necessário acessar http://localhos
 <p>- DELETE/clientes - O id do cliente é enviado na URL </p>
 <p>- DELETE/wishlist - O id do cliente e produto a ser excluído são enviados no corpo da requisição </p>
 
+<h2> Testes </h2>
+Foram desenvolvidos testes de integração para a presente API fazendo-se uso da biblioteca JEST, versão 26.6.3. Os testes englobam todas as rotas, sendo: usuários, clientes e wishlist. 
+Para dar início aos testes, basta digitar no console.log: "npm test".
+
 <h2>Tecnologias</h2>
 As seguintes ferramentas foram usadas na construção do projeto:
 
@@ -119,10 +123,14 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - axios - versão 0.21.1 </p>
 - bcrypt - versão 5.0.0 </p>
 - body-parser - versão 1.19.0 </p>
+- dotenv - versão 8.2.0 </p>
 - express - versão 4.17.1 </p>
 - jsonwebtoken - versão 8.5.1 </p>
 - morgan - versão 1.10.0 </p>
 - mysql2 - versão 2.2.5 </p>
+- jest - versão 26.6.3  </p>
+- nock - versão 13.0.7 </p>
+- supertest - versão 6.1.3 </p>
 
 </p>
 
