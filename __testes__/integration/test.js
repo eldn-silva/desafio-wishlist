@@ -13,7 +13,7 @@ describe("POST /users/cadastro", () => {
     it ("should return 201 to register user", async () => {
         const response = await request(server)
         .post("/users/cadastro")
-        .send({ email: "exemplo1@gmail.com", senha: "12345" })
+        .send({ email: "exemplo2@gmail.com", senha: "12345" })
         
     expect(response.status).toBe(201)
     })
@@ -23,7 +23,7 @@ describe("POST /users/login", () => {
     it ("should return 200 to login user", async () => {
         const response = await request(server)
         .post("/users/login")
-        .send({ email: "exemplo1@gmail.com", senha: "12345" })
+        .send({ email: "exemplo2@gmail.com", senha: "12345" })
         
     expect(response.status).toBe(200)
     })
@@ -140,7 +140,7 @@ describe("DELETE /wishlist/:id", () => {
     it ("should return 200", async () => {
         const response = await request(server)
         .delete("/wishlist")
-        .send({ id_cliente: 1, id_produto: "6d548487-4235-8512-8a5a-d9c813c8d05a"})
+        .send({ id_cliente: 1, id_produto: "6668a2df-257f-7dee-2215-0283a8244f9c"})
         .set('authorization', `bearer ${token}`)
         
     expect(response.status).toBe(202)

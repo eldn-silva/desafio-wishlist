@@ -28,3 +28,6 @@ CREATE TABLE `wishlist` (
   KEY `fk_wishlist_clientes_idx` (`clientes_idclientes`),
   CONSTRAINT `fk_wishlist_clientes` FOREIGN KEY (`clientes_idclientes`) REFERENCES `clientes` (`idclientes`)
 );
+
+INSERT INTO clientes (nome, email) VALUES ('exemplo1','exemplo1@gmail.com');
+INSERT INTO wishlist (idproduto, titulo, preco, imagem, clientes_idclientes) VALUES ('6668a2df-257f-7dee-2215-0283a8244f9c','Concha Inox com Cristal Swarovski',153.9,'http://challenge-api.luizalabs.com/images/6668a2df-257f-7dee-2215-0283a8244f9c.jpg',1)
